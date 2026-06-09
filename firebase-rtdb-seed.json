@@ -1,0 +1,29 @@
+{
+  "light": {
+    "status": false
+  },
+  "irrigation": {
+    "pump": false,
+    "mode": "manual",
+    "status": "monitoring",
+    "flowRate": 2.5,
+    "pumpStartedAt": null,
+    "runTime": null,
+    "moisture": 58
+  },
+  "sensors": {
+    "moisture": 58,
+    "raw": 487,
+    "updatedAt": 1749465577500
+  },
+  "device": {
+    "online": true,
+    "wifi": {
+      "connected": true,
+      "ssid": "Prakashfiber5",
+      "ip": "192.168.0.105",
+      "rssi": -58,
+      "lastSeen": 1749465577500
+    }
+  }
+}
