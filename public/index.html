@@ -1,89 +1,284 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haldia Roof Garden — IoT Control Dashboard</title>
+    <meta name="description" content="Real-time IoT monitoring and irrigation control dashboard for Haldia Roof Garden. Monitor soil moisture, control pumps and lights remotely.">
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/12.14.0/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/12.14.0/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/12.14.0/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/12.14.0/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/12.14.0/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/12.14.0/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/12.14.0/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/12.14.0/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/12.14.0/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/12.14.0/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <!-- Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+    <div class="dashboard-wrapper">
+
+        <!-- ─── Header ─── -->
+        <header class="dashboard-header">
+            <div class="header-top">
+                <div class="header-brand">
+                    <h1 class="header-title">Haldia Roof Garden</h1>
+                    <span class="header-subtitle">IoT Control & Automation System</span>
+                </div>
+            </div>
+            <div class="header-status-row">
+                <div id="wifiStatusBadge" class="status-badge">
+                    <span class="status-dot"></span>
+                    <span>WiFi: Connecting…</span>
+                </div>
+                <div id="connectionStatusBadge" class="status-badge">
+                    <span class="status-dot"></span>
+                    <span>Cloud: Checking</span>
+                </div>
+                <div id="statusBar" class="status-badge">
+                    <span class="status-dot"></span>
+                    <span id="systemStatus">Standby</span>
+                </div>
+                <div id="modeBadge" class="status-badge mode-badge mode-manual">
+                    <span class="status-dot"></span>
+                    <span>Mode: Manual</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- ─── Dashboard Grid ─── -->
+        <main class="dashboard-grid">
+
+            <!-- Card 1: Soil Sensors -->
+            <section id="sensorsCard" class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Live Soil Sensors</h2>
+                    <span id="lastUpdated" class="card-tag">Just Now</span>
+                </div>
+
+                <!-- Gauge -->
+                <div class="gauge-container">
+                    <div id="moistureRing" class="moisture-ring" style="--ring-color: #1A1A1A; --ring-deg: 0deg;">
+                        <div class="moisture-ring-inner">
+                            <span id="moistureValue" class="gauge-value">--</span>
+                            <span class="gauge-unit">%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p id="moistureLabel" class="moisture-label">Reading sensor data…</p>
+
+                <!-- Level Bar -->
+                <div class="level-bar-container">
+                    <div class="level-bar-labels">
+                        <span>Dry</span>
+                        <span>Optimal</span>
+                        <span>Wet</span>
+                    </div>
+                    <div class="level-track">
+                        <div class="level-marker" style="left: 35%"></div>
+                        <div class="level-marker" style="left: 70%"></div>
+                        <div id="levelFill" class="level-fill"></div>
+                    </div>
+                </div>
+
+                <!-- Data Tiles -->
+                <div class="tile-row">
+                    <div id="tileMoisture" class="data-tile">
+                        <div class="tile-label">Moisture</div>
+                        <p id="tileMoistureVal" class="tile-value">--<span class="tile-value-unit"> %</span></p>
+                    </div>
+                    <div id="tileRaw" class="data-tile">
+                        <div class="tile-label">Raw ADC</div>
+                        <p id="tileRawVal" class="tile-value">--</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Card 2: Pump Control -->
+            <section class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Pump Control</h2>
+                    <div id="pumpIndicator" class="status-pill">
+                        <span id="pumpDot" class="pill-dot"></span>
+                        <span id="pumpStatusText">Pump Off</span>
+                    </div>
+                </div>
+
+                <div id="tilePump" class="pump-state-tile">
+                    <div class="pump-state-label">Pump State</div>
+                    <p id="tilePumpVal" class="pump-state-value">OFF</p>
+                </div>
+
+                <!-- Flow Panel -->
+                <div id="flowPanel" class="flow-panel">
+                    <div class="flow-grid">
+                        <div class="flow-stat">
+                            <p class="flow-stat-label">Time</p>
+                            <p id="pumpRunTime" class="flow-stat-value">00:00:00</p>
+                        </div>
+                        <div class="flow-stat">
+                            <p class="flow-stat-label">Flow</p>
+                            <p class="flow-stat-value"><span id="flowRateVal">0.0</span> <span class="flow-stat-unit">L/m</span></p>
+                        </div>
+                        <div class="flow-stat">
+                            <p class="flow-stat-label">Vol</p>
+                            <p class="flow-stat-value"><span id="waterVolume">0.00</span> <span class="flow-stat-unit">L</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pump Timer Section -->
+                <div class="timer-section">
+                    <div class="timer-label">Pump Stop Timer</div>
+                    <div class="timer-presets">
+                        <button type="button" class="btn-timer-preset" data-minutes="1">1m</button>
+                        <button type="button" class="btn-timer-preset" data-minutes="2">2m</button>
+                        <button type="button" class="btn-timer-preset" data-minutes="5">5m</button>
+                        <button type="button" class="btn-timer-preset" data-minutes="10">10m</button>
+                        <button type="button" class="btn-timer-preset btn-custom-timer" id="btnCustomTimer">Custom</button>
+                    </div>
+                    <div id="customTimerForm" class="custom-timer-form hidden">
+                        <input type="number" id="inputCustomMinutes" min="1" max="1440" placeholder="Mins" class="timer-input">
+                        <button type="button" id="btnApplyCustomTimer" class="btn-apply-timer">Set</button>
+                    </div>
+                    <div id="activeTimerPanel" class="active-timer-panel">
+                        <div class="active-timer-content">
+                            <span class="timer-icon">⏳</span>
+                            <span id="activeTimerText">Stopping in: --:--</span>
+                            <button type="button" id="btnCancelTimer" class="btn-cancel-timer">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="card-divider">
+
+                <!-- Motor Buttons -->
+                <div class="btn-grid">
+                    <button id="btnMotorA" type="button" class="btn-rocker">
+                        <span class="led-light"></span>
+                        Motor A
+                        <span class="btn-sub">1.6 L/min</span>
+                    </button>
+                    <button id="btnMotorB" type="button" class="btn-rocker">
+                        <span class="led-light"></span>
+                        Motor B
+                        <span class="btn-sub">1.6 L/min</span>
+                    </button>
+                    <button id="btnMotorFull" type="button" class="btn-rocker btn-rocker-span-2">
+                        <span class="led-light"></span>
+                        Full Pump
+                        <span class="btn-sub">3.2 L/min</span>
+                    </button>
+                    <button id="btnMotorOff" type="button" class="btn-emergency btn-rocker-span-2">
+                        <span class="led-light-red"></span>
+                        Stop Pump
+                        <span class="btn-sub">Emergency Stop</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Card 3: Light Control -->
+            <section class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Garden Light</h2>
+                    <div id="lightIndicator" class="status-pill">
+                        <span id="lightDot" class="pill-dot"></span>
+                        <span id="lightStatusText">Light Off</span>
+                    </div>
+                </div>
+
+                <div id="lightCard" class="light-info-tile">
+                    <div>
+                        <div class="light-info-label">Light Relay</div>
+                        <p class="light-info-desc">Toggle 220V garden light</p>
+                    </div>
+                    <span id="lightStatusVal" class="light-status-val">OFF</span>
+                </div>
+
+                <div class="switch-container">
+                    <span id="lblLightOff" class="switch-label-left switch-label-active">OFF</span>
+                    <div id="toggleBtn" class="skeuo-switch-track">
+                        <div class="skeuo-switch-handle"></div>
+                    </div>
+                    <span id="lblLightOn" class="switch-label-right">ON</span>
+                </div>
+
+                <hr class="card-divider">
+
+                <div id="tileMode" class="mode-info-tile">
+                    <div class="light-info-label" style="text-align: center;">System Mode</div>
+                    <div class="switch-container">
+                        <span id="lblModeManual" class="switch-label-left switch-label-active">MANUAL</span>
+                        <div id="modeSwitch" class="skeuo-switch-track">
+                            <div class="skeuo-switch-handle"></div>
+                        </div>
+                        <span id="lblModeAuto" class="switch-label-right">AUTO</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Card 4: Moisture History -->
+            <section class="card span-2-lg">
+                <div class="card-header">
+                    <h2 class="card-title">Moisture History</h2>
+                    <span class="card-tag">24 Point Trend</span>
+                </div>
+
+                <div class="chart-container oscilloscope-screen">
+                    <canvas id="sparklineCanvas"></canvas>
+                </div>
+
+                <div class="trend-stats">
+                    <div class="trend-stat">
+                        <p class="trend-stat-label">Min</p>
+                        <p id="trendLow" class="trend-stat-value">--</p>
+                    </div>
+                    <div class="trend-stat">
+                        <p class="trend-stat-label">Now</p>
+                        <p id="trendNow" class="trend-stat-value">--</p>
+                    </div>
+                    <div class="trend-stat">
+                        <p class="trend-stat-label">Max</p>
+                        <p id="trendHigh" class="trend-stat-value">--</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Card 5: Usage Analytics -->
+            <section class="card span-full">
+                <div class="card-header">
+                    <h2 class="card-title">Usage Analytics</h2>
+                    <span class="card-tag">Lifetime Log</span>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="analytics-box">
+                        <p class="analytics-label">Last Run</p>
+                        <p id="statLastRun" class="analytics-value">Never</p>
+                    </div>
+                    <div class="analytics-box">
+                        <p class="analytics-label">Total Time</p>
+                        <p id="statTotalTime" class="analytics-value">0m</p>
+                    </div>
+                    <div class="analytics-box">
+                        <p class="analytics-label">Total Water</p>
+                        <p id="statTotalVolume" class="analytics-value">0.0 L</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="dashboard-footer">
+            <p>Haldia Roof Garden IoT Control © 2026 · Made with ❤️ by <a href="#">Prakash</a></p>
+        </footer>
+
     </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+    <!-- Core App Logic (ES6 Module) -->
+    <script type="module" src="/js/app.js"></script>
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
-      });
-    </script>
-  </body>
+</body>
 </html>

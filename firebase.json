@@ -1,10 +1,8 @@
 {
   "hosting": {
-    "public": ".",
+    "public": "public",
     "ignore": [
       "firebase.json",
-      "firebase-rtdb-seed.json",
-      "public/**",
       "**/.*",
       "**/node_modules/**"
     ],
