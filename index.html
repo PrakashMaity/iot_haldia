@@ -803,6 +803,93 @@
                 filter: drop-shadow(0 0 12px rgba(52, 211, 153, 0.3));
             }
         }
+    
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .btn-motor {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgb(203, 213, 225);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-motor span.subtitle {
+            font-size: 0.65rem;
+            color: rgb(100, 116, 139);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.25rem;
+        }
+
+        .btn-motor:hover {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-motor.active-a {
+            background: linear-gradient(145deg, rgba(56, 189, 248, 0.18), rgba(56, 189, 248, 0.06));
+            border-color: rgba(56, 189, 248, 0.4);
+            color: rgb(186, 230, 253);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 20px rgba(56, 189, 248, 0.15);
+        }
+
+        .btn-motor.active-b {
+            background: linear-gradient(145deg, rgba(16, 185, 129, 0.18), rgba(16, 185, 129, 0.06));
+            border-color: rgba(16, 185, 129, 0.4);
+            color: rgb(167, 243, 208);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 20px rgba(16, 185, 129, 0.15);
+        }
+
+        .btn-motor.active-full {
+            background: linear-gradient(145deg, rgba(139, 92, 246, 0.18), rgba(139, 92, 246, 0.06));
+            border-color: rgba(139, 92, 246, 0.4);
+            color: rgb(221, 214, 254);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 20px rgba(139, 92, 246, 0.15);
+        }
+        
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .stat-box {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 0.75rem;
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .stat-box .label {
+            font-size: 0.625rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: rgb(100, 116, 139);
+        }
+
+        .stat-box .val {
+            font-size: 1rem;
+            font-weight: 700;
+            color: rgb(241, 245, 249);
+        }
+
     </style>
 </head>
 
@@ -998,10 +1085,26 @@
             </div>
         </div>
 
-        <button id="pumpToggleBtn" type="button" class="btn-control btn-irrigation">
-            <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            Start Pump
-        </button>
+        
+        <div class="grid-2 mt-4">
+            <button id="btnMotorA" type="button" class="btn-motor">
+                Motor A
+                <span class="subtitle">1.6 L/min</span>
+            </button>
+            <button id="btnMotorB" type="button" class="btn-motor">
+                Motor B
+                <span class="subtitle">1.6 L/min</span>
+            </button>
+            <button id="btnMotorFull" type="button" class="btn-motor">
+                Full Pump
+                <span class="subtitle">3.2 L/min</span>
+            </button>
+            <button id="btnMotorOff" type="button" class="btn-motor">
+                Stop
+                <span class="subtitle">Emergency</span>
+            </button>
+        </div>
+
     </section>
 
     <!-- Garden Light -->
@@ -1030,9 +1133,32 @@
         </button>
     </section>
 
+    <!-- System Analytics -->
+    <section id="analyticsCard" class="control-card mt-6 lg:col-span-12">
+        <div class="control-header">
+            <div class="control-icon-wrap" style="color: #c084fc; border-color: rgba(192, 132, 252, 0.2); background: rgba(192, 132, 252, 0.05);">
+                <svg class="text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            </div>
+            <h2 class="text-sm uppercase tracking-wide text-slate-300 font-semibold">Usage Analytics</h2>
+        </div>
+        
+        <div class="stat-grid">
+            <div class="stat-box">
+                <span class="label">Last Run</span>
+                <span class="val" id="statLastRun">Never</span>
+            </div>
+            <div class="stat-box">
+                <span class="label">Total Run Time</span>
+                <span class="val text-emerald-400" id="statTotalTime">0h 0m</span>
+            </div>
+            <div class="stat-box">
+                <span class="label">Total Volume</span>
+                <span class="val text-sky-400" id="statTotalVolume">0.0 L</span>
+            </div>
+        </div>
+    </section>
     </div>
     </div>
-
 </div>
 
 <script type="module">
@@ -1063,7 +1189,7 @@ let lastMoistureValue = null;
 let lastUpdatedAt = null;
 let currentPump = false;
 let lastPumpState = false;
-let flowRateLpm = 2.5;
+let flowRateLpm = 0.0;
 let pumpStartTime = null;
 let remoteRunTimeSec = null;
 let firebasePumpStartedAt = null;
@@ -1077,7 +1203,8 @@ const DEMO_DATA = {
     updatedAt: Date.now() - 2500,
     trend: [38, 41, 44, 46, 48, 50, 52, 53, 54, 55, 56, 57, 56, 57, 58, 57, 58, 59, 58, 57, 58, 58, 59, 58],
     mode: "manual",
-    pump: false,
+    motorA: false,
+    motorB: false,
     light: false,
     status: "monitoring",
     flowRate: 2.5,
@@ -1100,6 +1227,72 @@ function formatRunTime(totalSeconds) {
     const m = Math.floor((sec % 3600) / 60);
     const s = sec % 60;
     return [h, m, s].map((n) => String(n).padStart(2, "0")).join(":");
+}
+
+
+let statsData = {
+    totalRunTimeMinutes: 0,
+    totalWaterVolumeLiters: 0,
+    lastRunTimestamp: null
+};
+
+// Listen to stats node
+onValue(ref(db, "irrigation/stats"), (snapshot) => {
+    if (snapshot.exists()) {
+        const data = snapshot.val();
+        statsData = {
+            totalRunTimeMinutes: data.totalRunTimeMinutes || 0,
+            totalWaterVolumeLiters: data.totalWaterVolumeLiters || 0,
+            lastRunTimestamp: data.lastRunTimestamp || null
+        };
+        updateStatsUI();
+    }
+});
+
+function updateStatsUI() {
+    // Format Last Run
+    const elLastRun = document.getElementById("statLastRun");
+    if (elLastRun) {
+        if (statsData.lastRunTimestamp) {
+            const date = new Date(statsData.lastRunTimestamp);
+            elLastRun.textContent = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' });
+        } else {
+            elLastRun.textContent = "Never";
+        }
+    }
+    
+    // Format Run Time
+    const elTotalTime = document.getElementById("statTotalTime");
+    if (elTotalTime) {
+        const totalMin = Math.floor(statsData.totalRunTimeMinutes);
+        const h = Math.floor(totalMin / 60);
+        const m = totalMin % 60;
+        elTotalTime.textContent = h > 0 ? `${h}h ${m}m` : `${m}m`;
+    }
+    
+    // Format Volume
+    const elTotalVolume = document.getElementById("statTotalVolume");
+    if (elTotalVolume) {
+        elTotalVolume.textContent = `${Number(statsData.totalWaterVolumeLiters).toFixed(1)} L`;
+    }
+}
+
+// When pump stops, calculate run time and add to stats
+function commitPumpStatsToCloud() {
+    if (!pumpStartTime) return;
+    const runDurationSec = Math.floor((Date.now() - pumpStartTime) / 1000);
+    if (runDurationSec < 1) return; // ignore sub-second runs
+    
+    const volumeLiters = (flowRateLpm / 60) * runDurationSec;
+    const durationMinutes = runDurationSec / 60;
+    
+    const newStats = {
+        totalRunTimeMinutes: statsData.totalRunTimeMinutes + durationMinutes,
+        totalWaterVolumeLiters: statsData.totalWaterVolumeLiters + volumeLiters,
+        lastRunTimestamp: Date.now()
+    };
+    
+    set(ref(db, "irrigation/stats"), newStats).catch(console.error);
 }
 
 function getRunSeconds() {
@@ -1128,11 +1321,15 @@ function startPumpTimer(startedAt) {
     pumpTimerInterval = setInterval(updateFlowMetrics, 1000);
 }
 
+
 function stopPumpTimer() {
     if (pumpTimerInterval) {
+        commitPumpStatsToCloud();
         clearInterval(pumpTimerInterval);
         pumpTimerInterval = null;
     }
+    pumpStartTime = null;
+
     pumpStartTime = null;
     remoteRunTimeSec = null;
     document.getElementById("flowPanel").classList.remove("active");
@@ -1434,7 +1631,7 @@ function updateMoistureUI(value, flash = false) {
     if (hasValue) pushMoistureHistory(pct);
 
     const sensorsCard = document.getElementById("sensorsCard");
-    if (!currentPump) {
+    if (currentPump === "off" || !currentPump) {
         sensorsCard.classList.remove("glow-green", "glow-orange", "glow-blue", "glow-pump");
         sensorsCard.classList.add(state.cardGlow);
     }
@@ -1484,48 +1681,96 @@ function updateSystemStatusUI(status, pumpOn) {
 }
 
 function updatePumpUI(isOn) {
-    currentPump = isOn === true;
+    let normalisedState = "off";
+    if (isOn === true || isOn === "full") normalisedState = "full";
+    else if (isOn === "A" || isOn === "motor_a" || isOn === "motorA") normalisedState = "A";
+    else if (isOn === "B" || isOn === "motor_b" || isOn === "motorB") normalisedState = "B";
+    else if (isOn === false || isOn === "off") normalisedState = "off";
+    
+    currentPump = normalisedState;
+    const isPumpRunning = currentPump !== "off";
+
     const irrigationCard = document.getElementById("irrigationCard");
     const sensorsCard = document.getElementById("sensorsCard");
     const pumpIndicator = document.getElementById("pumpIndicator");
-    const pumpToggleBtn = document.getElementById("pumpToggleBtn");
+    const pumpDot = document.getElementById("pumpDot");
+    const pumpStatusText = document.getElementById("pumpStatusText");
+    const tilePumpVal = document.getElementById("tilePumpVal");
+    
+    const btnA = document.getElementById("btnMotorA");
+    const btnB = document.getElementById("btnMotorB");
+    const btnFull = document.getElementById("btnMotorFull");
+    const btnOff = document.getElementById("btnMotorOff");
+    
+    // Clear styles
+    if(btnA) btnA.className = "btn-motor";
+    if(btnB) btnB.className = "btn-motor";
+    if(btnFull) btnFull.className = "btn-motor";
+    if(btnOff) btnOff.className = "btn-motor";
 
-    if (currentPump) {
-        document.getElementById("pumpDot").className = "w-2 h-2 rounded-full bg-sky-400 live-dot shrink-0";
-        document.getElementById("pumpStatusText").textContent = "Pump Running";
-        pumpIndicator.className = "status-pill status-pill-active-sky";
-        pumpToggleBtn.innerHTML = `<svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Stop Pump`;
-        pumpToggleBtn.className = "btn-control btn-irrigation-stop";
-        document.getElementById("tilePumpVal").textContent = "ON";
-        document.getElementById("tilePumpVal").className = "text-lg sm:text-xl font-bold text-sky-300 mt-1.5 leading-none";
+    if (isPumpRunning) {
+        let title = "Pump Running";
+        let tileTitle = "ON";
+        let colorDot = "bg-sky-400";
+        let colorClass = "status-pill-active-sky";
+        let textClass = "text-sky-300";
 
-        irrigationCard.classList.add("control-card-accent-sky");
+        if (currentPump === "A") {
+            if(btnA) btnA.classList.add("active-a");
+            title = "Motor A";
+            tileTitle = "Motor A";
+        } else if (currentPump === "B") {
+            if(btnB) btnB.classList.add("active-b");
+            title = "Motor B";
+            tileTitle = "Motor B";
+            colorDot = "bg-emerald-400";
+            textClass = "text-emerald-300";
+        } else if (currentPump === "full") {
+            if(btnFull) btnFull.classList.add("active-full");
+            title = "Full Pump";
+            tileTitle = "Full Pump";
+            colorDot = "bg-purple-400";
+            textClass = "text-purple-300";
+        }
+        
+        if(pumpDot) pumpDot.className = `w-2 h-2 rounded-full ${colorDot} live-dot shrink-0`;
+        if(pumpStatusText) pumpStatusText.textContent = title;
+        if(pumpIndicator) pumpIndicator.className = `status-pill ${colorClass}`;
+        
+        if(tilePumpVal) {
+            tilePumpVal.textContent = tileTitle;
+            tilePumpVal.className = `text-lg sm:text-xl font-bold mt-1.5 leading-none ${textClass}`;
+        }
+        
         sensorsCard.classList.remove("glow-green", "glow-orange", "glow-blue", "glow-pump");
         sensorsCard.classList.add("glow-pump");
+        document.getElementById("flowPanel").classList.add("active");
 
-        if (!lastPumpState) {
+        if (!lastPumpState || lastPumpState === "off") {
             const startAt = firebasePumpStartedAt || Date.now();
             startPumpTimer(startAt);
         }
     } else {
-        document.getElementById("pumpDot").className = "w-2 h-2 rounded-full bg-slate-500 shrink-0";
-        document.getElementById("pumpStatusText").textContent = "Pump OFF";
-        pumpIndicator.className = "status-pill";
-        pumpToggleBtn.innerHTML = `<svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Start Pump`;
-        pumpToggleBtn.className = "btn-control btn-irrigation";
-        document.getElementById("tilePumpVal").textContent = "OFF";
-        document.getElementById("tilePumpVal").className = "text-lg sm:text-xl font-bold text-white mt-1.5 leading-none";
-
-        irrigationCard.classList.remove("control-card-accent-sky");
-        const state = getMoistureState(lastMoistureValue);
+        if(btnOff) btnOff.classList.add("active-a");
+        if(pumpDot) pumpDot.className = "w-2 h-2 rounded-full bg-slate-500 shrink-0";
+        if(pumpStatusText) pumpStatusText.textContent = "Pump OFF";
+        if(pumpIndicator) pumpIndicator.className = "status-pill";
+        
+        if(tilePumpVal) {
+            tilePumpVal.textContent = "OFF";
+            tilePumpVal.className = "text-lg sm:text-xl font-bold text-slate-300 mt-1.5 leading-none";
+        }
+        
         sensorsCard.classList.remove("glow-green", "glow-orange", "glow-blue", "glow-pump");
+        const state = getMoistureState(lastMoistureValue);
         sensorsCard.classList.add(state.cardGlow);
+        document.getElementById("flowPanel").classList.remove("active");
 
-        if (lastPumpState) stopPumpTimer();
+        if (lastPumpState && lastPumpState !== "off") stopPumpTimer();
     }
 
     lastPumpState = currentPump;
-    updateSystemStatusUI(null, currentPump);
+    updateSystemStatusUI(null, isPumpRunning);
     flashTile(document.getElementById("tilePump"));
 }
 
@@ -1550,7 +1795,30 @@ function updateModeUI(mode) {
 // --- Firebase listeners ---
 
 const lightRef = ref(db, "light/status");
-const pumpRef = ref(db, "irrigation/pump");
+const motorARef = ref(db, "irrigation/motorA");
+const motorBRef = ref(db, "irrigation/motorB");
+
+let motorAState = false;
+let motorBState = false;
+
+onValue(motorARef, (snapshot) => {
+    motorAState = snapshot.val() === true;
+    updatePumpUIFromMotors();
+});
+
+onValue(motorBRef, (snapshot) => {
+    motorBState = snapshot.val() === true;
+    updatePumpUIFromMotors();
+});
+
+function updatePumpUIFromMotors() {
+    let state = "off";
+    if (motorAState && motorBState) state = "full";
+    else if (motorAState) state = "A";
+    else if (motorBState) state = "B";
+    updatePumpUI(state);
+}
+
 const modeRef = ref(db, "irrigation/mode");
 const statusRef = ref(db, "irrigation/status");
 const flowRateRef = ref(db, "irrigation/flowRate");
@@ -1609,10 +1877,6 @@ onValue(ref(db, "irrigation/moisture"), (snapshot) => {
     }
 });
 
-onValue(pumpRef, (snapshot) => {
-    const val = snapshot.val();
-    if (val !== null && val !== undefined) updatePumpUI(val);
-});
 
 onValue(modeRef, (snapshot) => {
     const val = snapshot.val();
@@ -1627,13 +1891,13 @@ onValue(flowRateRef, (snapshot) => {
         flowRateLpm = DEFAULT_FLOW_LPM;
     }
     document.getElementById("flowRateVal").textContent = flowRateLpm.toFixed(1);
-    if (currentPump) updateFlowMetrics();
+    if (currentPump && currentPump !== "off") updateFlowMetrics();
 });
 
 onValue(pumpStartedAtRef, (snapshot) => {
     const val = snapshot.val();
     firebasePumpStartedAt = val ? Number(val) : null;
-    if (currentPump && firebasePumpStartedAt) {
+    if (currentPump && currentPump !== "off" && firebasePumpStartedAt) {
         pumpStartTime = firebasePumpStartedAt;
         updateFlowMetrics();
     }
@@ -1644,12 +1908,12 @@ onValue(runTimeRef, (snapshot) => {
     remoteRunTimeSec = val !== null && val !== undefined && !isNaN(val)
         ? Math.floor(Number(val))
         : null;
-    if (currentPump) updateFlowMetrics();
+    if (currentPump && currentPump !== "off") updateFlowMetrics();
 });
 
 onValue(statusRef, (snapshot) => {
     const val = snapshot.val();
-    if (val !== null && val !== undefined) updateSystemStatusUI(val, currentPump);
+    if (val !== null && val !== undefined) updateSystemStatusUI(val, currentPump && currentPump !== "off");
 });
 
 // --- Light control ---
@@ -1694,23 +1958,67 @@ toggleBtn.addEventListener("click", async () => {
     await set(lightRef, !currentStatus);
 });
 
-document.getElementById("pumpToggleBtn").addEventListener("click", async () => {
-    const next = !currentPump;
-    if (next) {
-        const startedAt = Date.now();
-        await set(pumpStartedAtRef, startedAt);
-        firebasePumpStartedAt = startedAt;
-    } else {
-        await set(pumpStartedAtRef, null);
-        await set(runTimeRef, null);
-        firebasePumpStartedAt = null;
-    }
-    await set(pumpRef, next);
-});
 
 document.getElementById("modeBadge").addEventListener("click", async () => {
     await set(modeRef, currentMode === "auto" ? "manual" : "auto");
 });
+
+// --- Motor Control Button Listeners ---
+const btnMotorA = document.getElementById("btnMotorA");
+const btnMotorB = document.getElementById("btnMotorB");
+const btnMotorFull = document.getElementById("btnMotorFull");
+const btnMotorOff = document.getElementById("btnMotorOff");
+
+if (btnMotorA) {
+    btnMotorA.addEventListener("click", async () => {
+        if (!motorAState && !motorBState) {
+            const startedAt = Date.now();
+            await set(pumpStartedAtRef, startedAt);
+            firebasePumpStartedAt = startedAt;
+        }
+        await set(modeRef, "manual");
+        await set(motorARef, true);
+        await set(motorBRef, false);
+    });
+}
+
+if (btnMotorB) {
+    btnMotorB.addEventListener("click", async () => {
+        if (!motorAState && !motorBState) {
+            const startedAt = Date.now();
+            await set(pumpStartedAtRef, startedAt);
+            firebasePumpStartedAt = startedAt;
+        }
+        await set(modeRef, "manual");
+        await set(motorARef, false);
+        await set(motorBRef, true);
+    });
+}
+
+if (btnMotorFull) {
+    btnMotorFull.addEventListener("click", async () => {
+        if (!motorAState && !motorBState) {
+            const startedAt = Date.now();
+            await set(pumpStartedAtRef, startedAt);
+            firebasePumpStartedAt = startedAt;
+        }
+        await set(modeRef, "manual");
+        await set(motorARef, true);
+        await set(motorBRef, true);
+    });
+}
+
+if (btnMotorOff) {
+    btnMotorOff.addEventListener("click", async () => {
+        await set(modeRef, "manual");
+        await set(motorARef, false);
+        await set(motorBRef, false);
+        await set(pumpStartedAtRef, null);
+        await set(runTimeRef, null);
+        firebasePumpStartedAt = null;
+    });
+}
+
 
 function applyDemoData() {
     DEMO_DATA.trend.forEach((v) => moistureHistory.push(v));
@@ -1723,9 +2031,13 @@ function applyDemoData() {
     updateRawUI(DEMO_DATA.raw);
     updateConnectionUI();
     updateModeUI(DEMO_DATA.mode);
-    updatePumpUI(DEMO_DATA.pump);
+    let state = "off";
+    if (DEMO_DATA.motorA && DEMO_DATA.motorB) state = "full";
+    else if (DEMO_DATA.motorA) state = "A";
+    else if (DEMO_DATA.motorB) state = "B";
+    updatePumpUI(state);
     updateLightUI(DEMO_DATA.light);
-    updateSystemStatusUI(DEMO_DATA.status, DEMO_DATA.pump);
+    updateSystemStatusUI(DEMO_DATA.status, state !== "off");
     document.getElementById("flowRateVal").textContent = DEMO_DATA.flowRate.toFixed(1);
     deviceWifi = DEMO_DATA.wifi;
     firebaseRtdbConnected = true;

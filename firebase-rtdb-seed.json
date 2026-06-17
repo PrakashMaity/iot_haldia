@@ -3,18 +3,23 @@
     "status": false
   },
   "irrigation": {
-    "pump": false,
+    "motorA": false,
+    "motorB": false,
     "mode": "manual",
     "status": "monitoring",
     "flowRate": 2.5,
     "pumpStartedAt": null,
     "runTime": null,
-    "moisture": 58
+    "stats": {
+      "totalRunTimeMinutes": 0,
+      "totalWaterVolumeLiters": 0,
+      "lastRunTimestamp": null
+    }
   },
   "sensors": {
     "moisture": 58,
     "raw": 487,
-    "updatedAt": 1749465577500
+    "lastUpdatedAt": 1718012345000
   },
   "device": {
     "online": true,
